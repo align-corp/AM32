@@ -893,6 +893,24 @@
 #define TARGET_STALL_PROTECTION_INTERVAL 7000
 #endif
 
+#ifdef ALIGN_M450_F421
+#define FIRMWARE_NAME "Align M450"
+#define FILE_NAME "ALIGN_M450_F421"
+#define DEAD_TIME 60
+#define HARDWARE_GROUP_AT_045
+#define HARDWARE_GROUP_AT_C
+#define USE_SERIAL_TELEMETRY
+#define TARGET_VOLTAGE_DIVIDER 110
+#define MILLIVOLT_PER_AMP 75
+#define ADC_CHANNEL_VOLTAGE ADC_CHANNEL_3
+#define ADC_CHANNEL_CURRENT ADC_CHANNEL_6
+#define TARGET_STALL_PROTECTION_INTERVAL 8000
+#define RAMP_SPEED_STARTUP 1    // Reduced from default 2
+#define RAMP_SPEED_LOW_RPM 1    // Reduced from default 6
+#define RAMP_SPEED_HIGH_RPM 1   // Reduced from default 16
+#define TARGET_MIN_BEMF_COUNTS 6 // default 3, need to test
+#endif
+
 #ifdef  MICOAIR_743_AIO_F421
 #define FIRMWARE_NAME "MicoAir AIO"
 #define FILE_NAME "MICOAIR_743_AIO_F421"
