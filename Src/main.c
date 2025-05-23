@@ -747,6 +747,85 @@ void saveEEpromSettings()
     save_flash_nolib(eepromBuffer.buffer, sizeof(eepromBuffer.buffer), eeprom_address);
 }
 
+void initialize_eeprom_with_defaults() {
+    // Basic header (bytes 0-2)
+    eepromBuffer.reserved_0 = EEPROM_DEFAULT_START_BYTE;
+    eepromBuffer.eeprom_version = EEPROM_DEFAULT_VERSION;
+    eepromBuffer.reserved_1 = EEPROM_DEFAULT_BOOTLOADER_VERSION;
+    
+    // Firmware version (bytes 3-4)
+    eepromBuffer.version.major = VERSION_MAJOR;
+    eepromBuffer.version.minor = VERSION_MINOR;
+    
+    // Firmware name (bytes 5-16)
+    for (size_t i = 0; i < 12; i++) {
+        strlen(FIRMWARE_NAME) > i ? eepromBuffer.firmware_name[i] = (uint8_t)FIRMWARE_NAME[i] : 0;
+    }
+    
+    // Motor and ESC configuration (bytes 17-31)
+    eepromBuffer.dir_reversed = EEPROM_DEFAULT_DIRECTION_REVERSED;
+    eepromBuffer.bi_direction = EEPROM_DEFAULT_BIDIRECTIONAL_MODE;
+    eepromBuffer.use_sine_start = EEPROM_DEFAULT_SINUSOIDAL_STARTUP;
+    eepromBuffer.comp_pwm = EEPROM_DEFAULT_COMPLEMENTARY_PWM;
+    eepromBuffer.variable_pwm = EEPROM_DEFAULT_VARIABLE_PWM_FREQ;
+    eepromBuffer.stuck_rotor_protection = EEPROM_DEFAULT_STUCK_ROTOR_PROT;
+    eepromBuffer.advance_level = EEPROM_DEFAULT_TIMING_ADVANCE;
+    eepromBuffer.pwm_frequency = EEPROM_DEFAULT_PWM_FREQ;
+    eepromBuffer.startup_power = EEPROM_DEFAULT_STARTUP_POWER;
+    eepromBuffer.motor_kv = EEPROM_DEFAULT_MOTOR_KV;
+    eepromBuffer.motor_poles = EEPROM_DEFAULT_MOTOR_POLES;
+    eepromBuffer.brake_on_stop = EEPROM_DEFAULT_BRAKE_ON_STOP;
+    eepromBuffer.stall_protection = EEPROM_DEFAULT_ANTI_STALL;
+    eepromBuffer.beep_volume = EEPROM_DEFAULT_BEEP_VOLUME;
+    eepromBuffer.telementry_on_interval = EEPROM_DEFAULT_TELEMETRY_OUTPUT;
+    
+    // Servo settings (bytes 32-35)
+    eepromBuffer.servo.low_threshold = EEPROM_DEFAULT_SERVO_LOW;
+    eepromBuffer.servo.high_threshold = EEPROM_DEFAULT_SERVO_HIGH;
+    eepromBuffer.servo.neutral = EEPROM_DEFAULT_SERVO_NEUTRAL;
+    eepromBuffer.servo.dead_band = EEPROM_DEFAULT_SERVO_DEADBAND;
+    
+    // Protection settings (bytes 36-37)
+    eepromBuffer.low_voltage_cut_off = EEPROM_DEFAULT_LVC;
+    eepromBuffer.low_cell_volt_cutoff = EEPROM_DEFAULT_LVC_THRESHOLD;
+    
+    // RC car settings (bytes 38-39)
+    eepromBuffer.rc_car_reverse = EEPROM_DEFAULT_RC_CAR_TYPE;
+    eepromBuffer.use_hall_sensors = EEPROM_DEFAULT_OPTIONS;
+    
+    // Sine mode settings (bytes 40-42)
+    eepromBuffer.sine_mode_changeover_thottle_level = EEPROM_DEFAULT_SINE_MODE_RANGE;
+    eepromBuffer.drag_brake_strength = EEPROM_DEFAULT_DRAG_BRAKE;
+    eepromBuffer.driving_brake_strength = EEPROM_DEFAULT_RUNNING_BRAKE;
+    
+    // Temperature and current limits (bytes 43-44)
+    eepromBuffer.limits.temperature = EEPROM_DEFAULT_TEMP_LIMIT;
+    eepromBuffer.limits.current = EEPROM_DEFAULT_CURRENT_PROT;
+    
+    // Additional settings (bytes 45-47)
+    eepromBuffer.sine_mode_power = EEPROM_DEFAULT_SINE_MODE_STRENGTH;
+    eepromBuffer.input_type = EEPROM_DEFAULT_INPUT_TYPE;
+    eepromBuffer.auto_advance = EEPROM_DEFAULT_AUTO_TIMING;
+    
+    // Initialize tune array to zeros (bytes 48-175)
+    for (int i = 0; i < 128; i++) {
+        eepromBuffer.tune[i] = 0;
+    }
+    
+    // Initialize CAN settings to zeros (bytes 176-191)
+    eepromBuffer.can.can_node = 0;
+    eepromBuffer.can.esc_index = 0;
+    eepromBuffer.can.require_arming = 0;
+    eepromBuffer.can.telem_rate = 0;
+    eepromBuffer.can.require_zero_throttle = 0;
+    eepromBuffer.can.filter_hz = 0;
+    eepromBuffer.can.debug_rate = 0;
+    eepromBuffer.can.term_enable = 0;
+    for (int i = 0; i < 8; i++) {
+        eepromBuffer.can.reserved[i] = 0;
+    }
+}
+
 uint16_t getSmoothedCurrent()
 {
     total = total - readings[readIndex];
