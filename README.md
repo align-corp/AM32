@@ -17,7 +17,14 @@ AM32 has the following features:
 - KISS standard ESC telemetry
 - Variable PWM frequency
 - Sinusoidal startup mode, which is designed to get larger motors up to speed
+
 ## Build instructions
+
+### Using CMake
+`make targets` will list all the supported targets.
+Just use make to compile, eg: `make ALIGN_M450_F421`
+
+### Using Keil
 Download and install Keil community edition. Open the Keil project for the mcu you want in the "Keil projects" folder. Install any mcu packs if prompted. 
 Select the build target from the drop down box and build project 
 
