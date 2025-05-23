@@ -959,6 +959,7 @@
 #define HARDWARE_GROUP_AT_B
 #define HARDWARE_GROUP_AT_504
 #define USE_SERIAL_TELEMETRY
+#define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
 #endif
 
 #ifdef FOXEER_F421
