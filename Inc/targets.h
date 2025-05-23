@@ -804,6 +804,37 @@
 #define USE_SERIAL_TELEMETRY
 #endif
 
+#ifdef HAKRC_K_M460_F421
+#define FIRMWARE_NAME "HAKRCF4 M460" // must be 12 char
+#define FILE_NAME "HAKRC_K_M460_F421"
+#define DEAD_TIME 80
+#define HARDWARE_GROUP_AT_B
+#define HARDWARE_GROUP_AT_504
+#define USE_SERIAL_TELEMETRY
+#define RAMP_SPEED_STARTUP 1 // Reduced from default 2
+#define RAMP_SPEED_LOW_RPM 1 // Reduced from default 6
+#define RAMP_SPEED_HIGH_RPM 1 // Reduced from default 16
+#define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
+#define EEPROM_DEFAULT_MOTOR_KV 9 // *40+20 = 380 kv
+#define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
+#define EEPROM_DEFAULT_RUNNING_BRAKE 2 // 1 to 10
+#define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#endif
+
+#ifdef HAKRC_K_M3_F421
+#define FIRMWARE_NAME "HAKRCF4 M3  " // must be 12 char
+#define FILE_NAME "HAKRC_K_M3_F421"
+#define DEAD_TIME 80
+#define HARDWARE_GROUP_AT_B
+#define HARDWARE_GROUP_AT_504
+#define USE_SERIAL_TELEMETRY
+#define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
+#define EEPROM_DEFAULT_MOTOR_KV 17 // *40+20 = 700 kv
+#define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
+#define EEPROM_DEFAULT_RUNNING_BRAKE 2 // 1 to 10
+#define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#endif
+
 #ifdef FOXEER_F421
 #define HARDWARE_GROUP_AT_C
 #define FIRMWARE_NAME "FOXEER F4   "
