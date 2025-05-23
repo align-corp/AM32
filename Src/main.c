@@ -1720,13 +1720,22 @@ int main(void)
 
     loadEEpromSettings();
 
-    if (VERSION_MAJOR != eepromBuffer.version.major || VERSION_MINOR != eepromBuffer.version.minor || eeprom_layout_version > eepromBuffer.eeprom_version) {
-        eepromBuffer.version.major = VERSION_MAJOR;
-        eepromBuffer.version.minor = VERSION_MINOR;
-        for (size_t i = 0; i < 12; i++) {
-            strlen(FIRMWARE_NAME) > i ? eepromBuffer.firmware_name[i] = (uint8_t)FIRMWARE_NAME[i] : 0;
-        }
+    if (VERSION_MAJOR != eepromBuffer.version.major ||
+        VERSION_MINOR != eepromBuffer.version.minor || 
+        eeprom_layout_version > eepromBuffer.eeprom_version
+#ifdef ALIGN_SET_CUSTOM_DEFAULTS
+        // use kv to detect AM32 default values and to initialize Align defaults
+        || eepromBuffer.motor_kv == 0x37
+#endif
+        ) {
+        // Initialize all settings with defaults
+        initialize_eeprom_with_defaults();
+
+        // Save the initialized settings
         saveEEpromSettings();
+
+        // Load new settings
+        loadEEpromSettings();
     }
 
     // if (eepromBuffer.use_sine_start) {
