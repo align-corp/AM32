@@ -1786,11 +1786,22 @@ int main(void)
     enableCorePeripherals();
     loadEEpromSettings();
 
-    if (VERSION_MAJOR != eepromBuffer.version.major || VERSION_MINOR != eepromBuffer.version.minor || EEPROM_VERSION > eepromBuffer.eeprom_version) {
-        eepromBuffer.version.major = VERSION_MAJOR;
-        eepromBuffer.version.minor = VERSION_MINOR;
-        eepromBuffer.eeprom_version = EEPROM_VERSION;
+    if (VERSION_MAJOR != eepromBuffer.version.major ||
+        VERSION_MINOR != eepromBuffer.version.minor || 
+        EEPROM_VERSION > eepromBuffer.eeprom_version
+#ifdef ALIGN_SET_CUSTOM_DEFAULTS
+        // use kv to detect AM32 default values and to initialize Align defaults
+        || eepromBuffer.motor_kv == 0x37
+#endif
+        ) {
+        // Initialize all settings with defaults
+        initialize_eeprom_with_defaults();
+
+        // Save the initialized settings
         saveEEpromSettings();
+
+        // Load new settings
+        loadEEpromSettings();
     }
     
     if (eepromBuffer.dir_reversed == 1) {
