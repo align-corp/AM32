@@ -4434,4 +4434,143 @@
 #define TIM1_AUTORELOAD    ((uint16_t)(CPU_FREQUENCY_MHZ * 1000U * 1000U / NOMINAL_PWM)-1)
 #endif
 
+/***********************************************************************************************************/
+/* EEPROM defaults */
+// Basic header values (bytes 0-2)
+#define EEPROM_DEFAULT_START_BYTE           0x01    // byte 0: reserved_0
+#define EEPROM_DEFAULT_VERSION              0x02    // byte 1: eeprom_version
+#define EEPROM_DEFAULT_BOOTLOADER_VERSION   0x01    // byte 2: reserved_1
 
+// Firmware version (bytes 3-4)
+// Firmware name (bytes 5-16)
+
+// Motor and ESC configuration (bytes 17-31)
+#ifndef EEPROM_DEFAULT_DIRECTION_REVERSED
+#define EEPROM_DEFAULT_DIRECTION_REVERSED   0x00    // byte 17: dir_reversed
+#endif
+
+#ifndef EEPROM_DEFAULT_BIDIRECTIONAL_MODE
+#define EEPROM_DEFAULT_BIDIRECTIONAL_MODE   0x00    // byte 18: bi_direction
+#endif
+
+#ifndef EEPROM_DEFAULT_SINUSOIDAL_STARTUP
+#define EEPROM_DEFAULT_SINUSOIDAL_STARTUP   0x00    // byte 19: use_sine_start
+#endif
+
+#ifndef EEPROM_DEFAULT_COMPLEMENTARY_PWM
+#define EEPROM_DEFAULT_COMPLEMENTARY_PWM    0x01    // byte 20: comp_pwm
+#endif
+
+#ifndef EEPROM_DEFAULT_VARIABLE_PWM_FREQ
+#define EEPROM_DEFAULT_VARIABLE_PWM_FREQ    0x01    // byte 21: variable_pwm
+#endif
+
+#ifndef EEPROM_DEFAULT_STUCK_ROTOR_PROT
+#define EEPROM_DEFAULT_STUCK_ROTOR_PROT     0x01    // byte 22: stuck_rotor_protection
+#endif
+
+#ifndef EEPROM_DEFAULT_TIMING_ADVANCE
+#define EEPROM_DEFAULT_TIMING_ADVANCE       0x02    // byte 23: advance_level, 7.5 degreees increment
+#endif
+
+#ifndef EEPROM_DEFAULT_PWM_FREQ
+#define EEPROM_DEFAULT_PWM_FREQ             0x18    // byte 24: pwm_frequency
+#endif
+
+#ifndef EEPROM_DEFAULT_STARTUP_POWER
+#define EEPROM_DEFAULT_STARTUP_POWER        0x64    // byte 25: startup_power
+#endif
+
+#ifndef EEPROM_DEFAULT_MOTOR_KV
+#define EEPROM_DEFAULT_MOTOR_KV             0x37    // byte 26: motor_kv*40+20 (0x37 = 55 = 2220 KV)
+#endif
+
+#ifndef EEPROM_DEFAULT_MOTOR_POLES
+#define EEPROM_DEFAULT_MOTOR_POLES          0x0e    // byte 27: motor_poles (14 poles)
+#endif
+
+#ifndef EEPROM_DEFAULT_BRAKE_ON_STOP
+#define EEPROM_DEFAULT_BRAKE_ON_STOP        0x00    // byte 28: brake_on_stop
+#endif
+
+#ifndef EEPROM_DEFAULT_ANTI_STALL
+#define EEPROM_DEFAULT_ANTI_STALL           0x00    // byte 29: stall_protection
+#endif
+
+#ifndef EEPROM_DEFAULT_BEEP_VOLUME
+#define EEPROM_DEFAULT_BEEP_VOLUME          0x05    // byte 30: beep_volume
+#endif
+
+#ifndef EEPROM_DEFAULT_TELEMETRY_OUTPUT
+#define EEPROM_DEFAULT_TELEMETRY_OUTPUT     0x00    // byte 31: telementry_on_interval
+#endif
+
+// Servo settings (bytes 32-35)
+#ifndef EEPROM_DEFAULT_SERVO_LOW
+#define EEPROM_DEFAULT_SERVO_LOW            0x80    // byte 32: servo.low_threshold
+#endif
+
+#ifndef EEPROM_DEFAULT_SERVO_HIGH
+#define EEPROM_DEFAULT_SERVO_HIGH           0x80    // byte 33: servo.high_threshold
+#endif
+
+#ifndef EEPROM_DEFAULT_SERVO_NEUTRAL
+#define EEPROM_DEFAULT_SERVO_NEUTRAL        0x80    // byte 34: servo.neutral
+#endif
+
+#ifndef EEPROM_DEFAULT_SERVO_DEADBAND
+#define EEPROM_DEFAULT_SERVO_DEADBAND       0x32    // byte 35: servo.dead_band
+#endif
+
+// Protection settings (bytes 36-37)
+#ifndef EEPROM_DEFAULT_LVC
+#define EEPROM_DEFAULT_LVC                  0x00    // byte 36: low_voltage_cut_off
+#endif
+
+#ifndef EEPROM_DEFAULT_LVC_THRESHOLD
+#define EEPROM_DEFAULT_LVC_THRESHOLD        0x32    // byte 37: low_cell_volt_cutoff
+#endif
+
+// RC car settings (bytes 38-39)
+#ifndef EEPROM_DEFAULT_RC_CAR_TYPE
+#define EEPROM_DEFAULT_RC_CAR_TYPE          0x00    // byte 38: rc_car_reverse
+#endif
+
+#ifndef EEPROM_DEFAULT_OPTIONS
+#define EEPROM_DEFAULT_OPTIONS              0x00    // byte 39: use_hall_sensors
+#endif
+
+// Sine mode settings (bytes 40-42)
+#ifndef EEPROM_DEFAULT_SINE_MODE_RANGE
+#define EEPROM_DEFAULT_SINE_MODE_RANGE      0x0f    // byte 40: sine_mode_changeover_thottle_level
+#endif
+
+#ifndef EEPROM_DEFAULT_DRAG_BRAKE
+#define EEPROM_DEFAULT_DRAG_BRAKE           0x0a    // byte 41: drag_brake_strength
+#endif
+
+#ifndef EEPROM_DEFAULT_RUNNING_BRAKE
+#define EEPROM_DEFAULT_RUNNING_BRAKE        0x0a    // byte 42: driving_brake_strength
+#endif
+
+// Temperature and current limits (bytes 43-44)
+#ifndef EEPROM_DEFAULT_TEMP_LIMIT
+#define EEPROM_DEFAULT_TEMP_LIMIT           0x8d    // byte 43: limits.temperature (141°C)
+#endif
+
+#ifndef EEPROM_DEFAULT_CURRENT_PROT
+#define EEPROM_DEFAULT_CURRENT_PROT         0x66    // byte 44: limits.current (102A)
+#endif
+
+// Additional settings (bytes 45-47)
+#ifndef EEPROM_DEFAULT_SINE_MODE_STRENGTH
+#define EEPROM_DEFAULT_SINE_MODE_STRENGTH   0x06    // byte 45: sine_mode_power
+#endif
+
+#ifndef EEPROM_DEFAULT_INPUT_TYPE
+#define EEPROM_DEFAULT_INPUT_TYPE           0x00    // byte 46: input_type
+#endif
+
+#ifndef EEPROM_DEFAULT_AUTO_TIMING
+#define EEPROM_DEFAULT_AUTO_TIMING          0x00    // byte 47: auto_advance disabled
+#endif
