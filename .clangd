@@ -1,0 +1,71 @@
+CompileFlags:
+  Add:
+    # Target-specific defines
+    - -DALIGN_40A_L431_CAN
+
+    # Specify C language
+    - -xc
+
+    # STM32L431 MCU specific flags
+    - -mcpu=cortex-m4
+    - -mthumb
+    - -mfloat-abi=hard
+    - -DSTM32L431xx
+    - -DUSE_FULL_LL_DRIVER
+
+    # STM32L4 peripheral defines
+    - -DHSE_STARTUP_TIMEOUT=100
+    - -DLSE_STARTUP_TIMEOUT=5000
+    - -DDATA_CACHE_ENABLE=1
+    - -DINSTRUCTION_CACHE_ENABLE=0
+    - -DVDD_VALUE=3300
+    - -DLSI_VALUE=32000
+    - -DHSI_VALUE=16000000
+    - -DPREFETCH_ENABLE=1
+
+    # DroneCAN support
+    - -DDRONECAN_SUPPORT=1
+
+    # L431 Include paths (absolute paths)
+    - -I/Users/luca/code/AM32/Src
+    - -I/Users/luca/code/AM32/Inc
+    - -I/Users/luca/code/AM32/Mcu/l431/Inc
+    - -I/Users/luca/code/AM32/Mcu/l431/Drivers/STM32L4xx_HAL_Driver/Inc
+    - -I/Users/luca/code/AM32/Mcu/l431/Drivers/CMSIS/Include
+    - -I/Users/luca/code/AM32/Mcu/l431/Drivers/CMSIS/Device/ST/STM32L4xx/Include
+
+    # DroneCAN Include paths (absolute paths)
+    - -I/Users/luca/code/AM32/Src/DroneCAN
+    - -I/Users/luca/code/AM32/Src/DroneCAN/libcanard
+    - -I/Users/luca/code/AM32/Src/DroneCAN/libcanard/drivers/stm32
+    - -I/Users/luca/code/AM32/Src/DroneCAN/dsdl_generated/include
+
+    # System includes for standard headers
+    - -isystem
+    - /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include
+    - -isystem
+    - /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+
+    # Compiler options
+    - -g
+    - -O3
+    - -Wall
+    - -Wextra
+    - -Wundef
+    - -ffunction-sections
+    - -fomit-frame-pointer
+    - -fsingle-precision-constant
+    - -ffast-math
+    - -std=c99
+
+    # Target specification
+    - --target=arm-none-eabi
+
+  # Remove incorrect flags
+  Remove:
+    - -mcpu=cortex-m0
+    - -DSTM32F051x8
+    - -DF051
+    - -DAT32F421K8U7
+    - -xobjective-c++-header
+    - -mfloat-abi=soft
