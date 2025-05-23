@@ -1,0 +1,50 @@
+CompileFlags:
+  Add: 
+    # Specify C language
+    - -xc
+    
+    # F421 MCU specific flags
+    - -mcpu=cortex-m4
+    - -mthumb
+    - -DAT32F421K8U7
+    
+    # FPU configuration - explicitly set to 0 to avoid FPU instructions
+    - -D__FPU_PRESENT=0
+    
+    # F421 Include paths
+    - -I/Users/luca/code/AM32/Src
+    - -I/Users/luca/code/AM32/Inc
+    - -I/Users/luca/code/AM32/Mcu/f421/Inc
+    - -I/Users/luca/code/AM32/Mcu/f421/Drivers/drivers/inc
+    - -I/Users/luca/code/AM32/Mcu/f421/Drivers/CMSIS/cm4/core_support
+    - -I/Users/luca/code/AM32/Mcu/f421/Drivers/CMSIS/cm4/device_support
+    
+    # System includes for standard headers like string.h
+    - -isystem
+    - /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include
+    - -isystem
+    - /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
+    
+    # Target-specific defines
+    - -DHAKRC_K_M460_F421
+    
+    # Compiler options
+    - -g
+    - -O2
+    - -Wall
+    - -ffunction-sections
+    - -std=c99
+    
+    # Target specification
+    - --target=arm-none-eabi
+    
+    # Additional ARM options to avoid FPU
+    - -mfloat-abi=soft
+  
+  # Remove incorrect flags
+  Remove: 
+    - -mcpu=cortex-m0
+    - -DSTM32F051x8
+    - -DUSE_FULL_LL_DRIVER
+    - -DF051
+    - -xobjective-c++-header
