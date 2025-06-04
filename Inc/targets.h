@@ -831,8 +831,21 @@
 #define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
 #define EEPROM_DEFAULT_MOTOR_KV 17 // *40+20 = 700 kv
 #define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
-#define EEPROM_DEFAULT_RUNNING_BRAKE 2 // 1 to 10
 #define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#define EEPROM_DEFAULT_SINUSOIDAL_STARTUP 1 // enable sinusoidal startup
+#endif
+
+#ifdef HAKRC_K_MR25_F421
+#define FIRMWARE_NAME "HAKRCF4 MR25" // must be 12 char
+#define FILE_NAME "HAKRC_K_MR25_F421"
+#define DEAD_TIME 80
+#define HARDWARE_GROUP_AT_B
+#define HARDWARE_GROUP_AT_504
+#define USE_SERIAL_TELEMETRY
+#define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
+#define EEPROM_DEFAULT_MOTOR_KV 59 // *40+20 = 2380 kv
+#define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#define EEPROM_DEFAULT_SINUSOIDAL_STARTUP 1 // enable sinusoidal startup
 #endif
 
 #ifdef FOXEER_F421
@@ -893,8 +906,23 @@
 #define TARGET_STALL_PROTECTION_INTERVAL 7000
 #endif
 
+#ifdef FOXAIR_M3_F421
+#define FIRMWARE_NAME "FoxAir M3   "
+#define FILE_NAME "FOXAIR_M3_F421"
+#define DEAD_TIME 80
+#define HARDWARE_GROUP_AT_045
+#define HARDWARE_GROUP_AT_B
+#define USE_SERIAL_TELEMETRY
+#define TARGET_STALL_PROTECTION_INTERVAL 9000 //default 6500
+#define TARGET_MIN_BEMF_COUNTS 1 // default 3, need to test
+#define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
+#define EEPROM_DEFAULT_MOTOR_KV 17 // *40+20 = 700 kv
+#define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
+#define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#endif
+
 #ifdef ALIGN_M450_F421
-#define FIRMWARE_NAME "Align M450"
+#define FIRMWARE_NAME "Align M450  "
 #define FILE_NAME "ALIGN_M450_F421"
 #define DEAD_TIME 60
 #define HARDWARE_GROUP_AT_045
@@ -904,11 +932,11 @@
 #define MILLIVOLT_PER_AMP 75
 #define ADC_CHANNEL_VOLTAGE ADC_CHANNEL_3
 #define ADC_CHANNEL_CURRENT ADC_CHANNEL_6
-#define TARGET_STALL_PROTECTION_INTERVAL 8000
+// #define TARGET_STALL_PROTECTION_INTERVAL 8000
 #define RAMP_SPEED_STARTUP 1    // Reduced from default 2
 #define RAMP_SPEED_LOW_RPM 1    // Reduced from default 6
 #define RAMP_SPEED_HIGH_RPM 1   // Reduced from default 16
-#define TARGET_MIN_BEMF_COUNTS 6 // default 3, need to test
+// #define TARGET_MIN_BEMF_COUNTS 6 // default 3, need to test
 #endif
 
 #ifdef  MICOAIR_743_AIO_F421
@@ -1434,6 +1462,18 @@
 #define HARDWARE_GROUP_F0_A
 #define TARGET_VOLTAGE_DIVIDER 65
 #define USE_SERIAL_TELEMETRY
+#endif
+
+#ifdef FD6288_M460_F051
+#define FILE_NAME "FD6288_M460_F051"
+#define FIRMWARE_NAME "FD6288_M460 "
+#define DEAD_TIME 45
+#define HARDWARE_GROUP_F0_A
+#define TARGET_VOLTAGE_DIVIDER 65
+#define USE_SERIAL_TELEMETRY
+#define RAMP_SPEED_STARTUP 1    // Reduced from default 2
+#define RAMP_SPEED_LOW_RPM 1    // Reduced from default 6
+#define RAMP_SPEED_HIGH_RPM 1   // Reduced from default 16
 #endif
 
 #ifdef SDMODEL_F051
