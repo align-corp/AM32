@@ -777,7 +777,7 @@ void initialize_eeprom_with_defaults() {
     eepromBuffer.brake_on_stop = EEPROM_DEFAULT_BRAKE_ON_STOP;
     eepromBuffer.stall_protection = EEPROM_DEFAULT_ANTI_STALL;
     eepromBuffer.beep_volume = EEPROM_DEFAULT_BEEP_VOLUME;
-    eepromBuffer.telementry_on_interval = EEPROM_DEFAULT_TELEMETRY_OUTPUT;
+    eepromBuffer.telemetry_on_interval = EEPROM_DEFAULT_TELEMETRY_OUTPUT;
     
     // Servo settings (bytes 32-35)
     eepromBuffer.servo.low_threshold = EEPROM_DEFAULT_SERVO_LOW;
