@@ -1,5 +1,8 @@
 CompileFlags:
   Add: 
+    # Target-specific defines
+    - -D ALIGN_M450_F421
+
     # Specify C language
     - -xc
     
@@ -24,9 +27,6 @@ CompileFlags:
     - /Library/Developer/CommandLineTools/usr/lib/clang/15.0.0/include
     - -isystem
     - /Library/Developer/CommandLineTools/SDKs/MacOSX.sdk/usr/include
-    
-    # Target-specific defines
-    - -DHAKRC_K_M460_F421
     
     # Compiler options
     - -g
