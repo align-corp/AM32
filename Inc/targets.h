@@ -819,6 +819,7 @@
 #define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
 #define EEPROM_DEFAULT_RUNNING_BRAKE 2 // 1 to 10
 #define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
 #endif
 
 #ifdef HAKRC_K_M3_F421
@@ -833,6 +834,7 @@
 #define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
 #define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
 #define EEPROM_DEFAULT_SINUSOIDAL_STARTUP 1 // enable sinusoidal startup
+#define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
 #endif
 
 #ifdef HAKRC_K_MR25_F421
