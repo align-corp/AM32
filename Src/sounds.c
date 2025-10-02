@@ -96,6 +96,7 @@ void playBlueJayTune()
 
 void playStartupTune()
 {
+#ifndef ALIGN_DISABLE_STARTUP_TUNE
     __disable_irq();
 
     if (eepromBuffer.tune[0] != ERASED_FLASH_BYTE) {
@@ -122,6 +123,7 @@ void playStartupTune()
 
     SET_AUTO_RELOAD_PWM(TIMER1_MAX_ARR);
     __enable_irq();
+#endif
 }
 
 void playBrushedStartupTune()
