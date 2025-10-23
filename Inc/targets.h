@@ -968,14 +968,12 @@
 #define HARDWARE_GROUP_AT_B
 #define HARDWARE_GROUP_AT_504
 #define USE_SERIAL_TELEMETRY
-#define RAMP_SPEED_STARTUP 1 // Reduced from default 2
-#define RAMP_SPEED_LOW_RPM 1 // Reduced from default 6
-#define RAMP_SPEED_HIGH_RPM 4 // Reduced from default 16
 #define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
 #define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
 #define EEPROM_DEFAULT_MOTOR_KV 9 // *40+20 = 380 kv
-#define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
+#define EEPROM_DEFAULT_TIMING_ADVANCE 10 // [10 42] -10*0.9375 deg
 #define EEPROM_DEFAULT_RUNNING_BRAKE 3 // 1 to 10
+#define EEPROM_DEFAULT_MAX_RAMP 40 // old RAMP_SPEED_HIGH_RPM 4
 #define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
 #endif
 
@@ -987,8 +985,8 @@
 #define HARDWARE_GROUP_AT_504
 #define USE_SERIAL_TELEMETRY
 #define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
-#define EEPROM_DEFAULT_MOTOR_KV 17 // *40+20 = 700 kv
-#define EEPROM_DEFAULT_TIMING_ADVANCE 0 // *7.5 degrees
+#define EEPROM_DEFAULT_MOTOR_KV 16 // *40+20 = 660 kv
+#define EEPROM_DEFAULT_TIMING_ADVANCE 26 // [10 42] -10*0.9375 deg
 #define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
 #define EEPROM_DEFAULT_SINUSOIDAL_STARTUP 1 // enable sinusoidal startup
 #define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
@@ -1091,11 +1089,13 @@
 #define MILLIVOLT_PER_AMP 75
 #define ADC_CHANNEL_VOLTAGE ADC_CHANNEL_3
 #define ADC_CHANNEL_CURRENT ADC_CHANNEL_6
-// #define TARGET_STALL_PROTECTION_INTERVAL 8000
-#define RAMP_SPEED_STARTUP 1    // Reduced from default 2
-#define RAMP_SPEED_LOW_RPM 1    // Reduced from default 6
-#define RAMP_SPEED_HIGH_RPM 1   // Reduced from default 16
-// #define TARGET_MIN_BEMF_COUNTS 6 // default 3, need to test
+#define ALIGN_SET_CUSTOM_DEFAULTS // set custom eeprom defaults
+#define EEPROM_DEFAULT_INPUT_TYPE 1 // DSHOT
+#define EEPROM_DEFAULT_MOTOR_KV 9 // *40+20 = 380 kv
+#define EEPROM_DEFAULT_TIMING_ADVANCE 10 // [10 42] -10*0.9375 deg
+#define EEPROM_DEFAULT_RUNNING_BRAKE 3 // 1 to 10
+#define EEPROM_DEFAULT_MAX_RAMP 40 // old RAMP_SPEED_HIGH_RPM 4
+#define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
 #endif
 
 #ifdef  MICOAIR_743_AIO_F421
