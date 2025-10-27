@@ -35,6 +35,8 @@
 #define CANARD_POOL_SIZE 4096
 #endif
 
+#define LIGHT_ID_ESC 20
+
 // use set input at 1kHz
 #define TARGET_PERIOD_US 1000U
 
@@ -673,6 +675,32 @@ static void handle_RawCommand(CanardInstance *ins, CanardRxTransfer *transfer)
     set_input(this_input);
 }
 
+#ifdef USE_RGB_LED
+/*
+  handle a LightsCommand request
+*/
+static void handle_LightsCommand(CanardInstance *ins, CanardRxTransfer *transfer)
+{
+    struct uavcan_equipment_indication_LightsCommand cmd;
+    if (uavcan_equipment_indication_LightsCommand_decode(transfer, &cmd)) {
+        return;
+    }
+
+    // return if nothing to do (use ESC index as light index)
+    if (cmd.commands.len <= eepromBuffer.can.esc_index) {
+        return;
+    }
+    
+    // return if led ID is not ESC
+    if (cmd.commands.data[(unsigned)eepromBuffer.can.esc_index].light_id != LIGHT_ID_ESC) {
+        return;
+    }
+
+    struct uavcan_equipment_indication_RGB565 led = cmd.commands.data[(unsigned)eepromBuffer.can.esc_index].color;
+    setIndividualRGBLed(led.red, led.green, led.blue);
+}
+#endif
+
 /*
   handle ArmingStatus messages
 */
@@ -901,6 +929,13 @@ static void onTransferReceived(CanardInstance *ins, CanardRxTransfer *transfer)
             handle_RawCommand(ins, transfer);
             break;
         }
+
+#ifdef USE_RGB_LED
+        case UAVCAN_EQUIPMENT_INDICATION_LIGHTSCOMMAND_ID: {
+            handle_LightsCommand(ins, transfer);
+            break;
+        }
+#endif
         case UAVCAN_PROTOCOL_DYNAMIC_NODE_ID_ALLOCATION_ID: {
             handle_DNA_Allocation(ins, transfer);
             break;
@@ -970,6 +1005,12 @@ static bool shouldAcceptTransfer(const CanardInstance *ins,
 	    *out_data_type_signature = UAVCAN_EQUIPMENT_SAFETY_ARMINGSTATUS_SIGNATURE;
             return true;
         }
+#ifdef USE_RGB_LED
+        case UAVCAN_EQUIPMENT_INDICATION_LIGHTSCOMMAND_ID: {
+            *out_data_type_signature = UAVCAN_EQUIPMENT_INDICATION_LIGHTSCOMMAND_SIGNATURE;
+            return true;
+        }
+#endif
         }
     }
     // we don't want any other messages
