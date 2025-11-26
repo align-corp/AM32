@@ -952,6 +952,16 @@
 #define VOLTAGE_ADC_PIN GPIO_PINS_2
 #endif
 
+#ifdef HAKRC_SILENT_K_F421
+#define FIRMWARE_NAME "HAKRC F4 SK "
+#define FILE_NAME "HAKRC_SILENT_K_F421"
+#define DEAD_TIME 80
+#define HARDWARE_GROUP_AT_B
+#define HARDWARE_GROUP_AT_504
+#define USE_SERIAL_TELEMETRY
+#define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
+#endif
+
 #ifdef HAKRC_K_F421
 #define FIRMWARE_NAME "HAKRC F4 K  "
 #define FILE_NAME "HAKRC_K_F421"
@@ -959,7 +969,6 @@
 #define HARDWARE_GROUP_AT_B
 #define HARDWARE_GROUP_AT_504
 #define USE_SERIAL_TELEMETRY
-#define ALIGN_DISABLE_STARTUP_TUNE // disable startup tune
 #endif
 
 #ifdef FOXEER_F421
