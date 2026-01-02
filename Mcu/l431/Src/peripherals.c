@@ -621,19 +621,22 @@ void LED_GPIO_init()
     LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
 
     /* GPIO Ports Clock Enable */
-    LL_AHB1_GRP1_EnableClock(LL_AHB1_GRP1_PERIPH_GPIOB);
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
 
-    LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_8);
+    LL_GPIO_ResetOutputPin(GPIOA, LL_GPIO_PIN_15);
     LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_5);
     LL_GPIO_ResetOutputPin(GPIOB, LL_GPIO_PIN_3);
 
-    GPIO_InitStruct.Pin = LL_GPIO_PIN_8;
+    // PA15 - Red LED
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_15;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
-    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
 
+    // PB5 - Green LED
     GPIO_InitStruct.Pin = LL_GPIO_PIN_5;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
@@ -641,12 +644,35 @@ void LED_GPIO_init()
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
 
+    // PB3 - Blue LED
     GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
     GPIO_InitStruct.Mode = LL_GPIO_MODE_OUTPUT;
     GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
     GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
     GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
     LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+}
+
+void setIndividualRGBLed(uint8_t red, uint8_t green, uint8_t blue)
+{
+    // PA15 - Red LED
+    if (red > 0) {
+        GPIOA->BSRR = LL_GPIO_PIN_15;
+    } else {
+        GPIOA->BRR = LL_GPIO_PIN_15;
+    }
+    // PB5 - Green LED
+    if (green > 0) {
+        GPIOB->BSRR = LL_GPIO_PIN_5;
+    } else {
+        GPIOB->BRR = LL_GPIO_PIN_5;
+    }
+    // PB3 - Blue LED
+    if (blue > 0) {
+        GPIOB->BSRR = LL_GPIO_PIN_3;
+    } else {
+        GPIOB->BRR = LL_GPIO_PIN_3;
+    }
 }
 
 #endif
@@ -746,9 +772,9 @@ void enableCorePeripherals()
 
 #ifdef USE_RGB_LED
     LED_GPIO_init();
-    GPIOB->BRR = LL_GPIO_PIN_8; // turn on red
-    GPIOB->BSRR = LL_GPIO_PIN_5;
-    GPIOB->BSRR = LL_GPIO_PIN_3; //
+    GPIOB->BSRR = LL_GPIO_PIN_3;  // turn on red (PB3)
+    GPIOB->BRR = LL_GPIO_PIN_5;   // turn off green (PB5)
+    GPIOA->BRR = LL_GPIO_PIN_15;  // turn off blue (PA15)
 #endif
 
 #ifdef USE_CUSTOM_LED
