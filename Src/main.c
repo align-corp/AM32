@@ -2031,7 +2031,7 @@ if(zero_crosses < 5){
             startADCConversion( );
             converted_degrees = getConvertedDegrees(ADC_raw_temp);
 #endif
-            degrees_celsius = converted_degrees;
+            degrees_celsius = ((15 * degrees_celsius) + converted_degrees) >> 4;
             battery_voltage = ((7 * battery_voltage) + ((ADC_raw_volts * 3300 / 4095 * VOLTAGE_DIVIDER) / 100)) >> 3;
             smoothed_raw_current = getSmoothedCurrent();
             actual_current = ((smoothed_raw_current * 3300 / 41) - (CURRENT_OFFSET * 100)) / (MILLIVOLT_PER_AMP);
