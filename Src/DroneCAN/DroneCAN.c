@@ -47,6 +47,7 @@ struct CANStats canstats;
 
 static bool dronecan_armed;
 static bool done_startup;
+static uint64_t last_set_input_us;
 
 #define APP_SIGNATURE_MAGIC1 0x68f058e6
 #define APP_SIGNATURE_MAGIC2 0xafcee5a0
@@ -618,6 +619,7 @@ static void set_input(uint16_t input)
     newinput = filtered_input;
     last_can_input = unfiltered_input;
     inputSet = 1;
+    last_set_input_us = micros64();
 
     // we must set dshot for bi_direction to work
     dshot = eepromBuffer.bi_direction;
@@ -671,6 +673,9 @@ static void handle_RawCommand(CanardInstance *ins, CanardRxTransfer *transfer)
     canstats.num_commands++;
     canstats.total_commands++;
     canstats.last_raw_command_us = ts;
+
+    // we received a valid input, reset timeout 
+    signaltimeout = 0;
 
     set_input(this_input);
 }
@@ -892,9 +897,6 @@ static void request_DNA()
 */
 static void onTransferReceived(CanardInstance *ins, CanardRxTransfer *transfer)
 {
-    // tell main loop we have had signal so we don't reset
-    signaltimeout = 0;
-
     canstats.on_receive++;
     // switch on data type ID to pass to the right handler function
     if (transfer->transfer_type == CanardTransferTypeRequest) {
@@ -1286,12 +1288,12 @@ void DroneCAN_update()
           we have stopped getting CAN RawCommand, zero input
          */
         canstats.last_raw_command_us = 0;
+        last_can_input = 0;
         set_input(0);
     }
-    if (ts - canstats.last_raw_command_us > TARGET_PERIOD_US) {
-        // ensure at least 1kHz signal is seen by main code
+    // ensure at least 1kHz signal is seen by main code
+    if (canstats.last_raw_command_us != 0 && ts - last_set_input_us > TARGET_PERIOD_US) {
         set_input(last_can_input);
-        canstats.last_raw_command_us = ts;
     }
 
     sys_can_enable_IRQ();
