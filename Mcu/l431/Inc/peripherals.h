@@ -52,3 +52,11 @@ void generatePwmTimerEvent(void);
 void UN_TIM_Init(void);
 void LED_GPIO_init(void);
 void setIndividualRGBLed(uint8_t red, uint8_t green, uint8_t blue);
+#ifdef ALIGN_SERVO
+void servo_init(void);
+void setServoMicroseconds(uint16_t pulse_us);
+#endif
+#ifdef ALIGN_GPIO_CAN
+void align_gpio_init(void);
+uint8_t align_gpio_read(void);
+#endif

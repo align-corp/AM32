@@ -37,6 +37,12 @@ void initCorePeripherals(void)
     MX_TIM6_Init();
     MX_TIM7_Init();
     UN_TIM_Init();
+#ifdef ALIGN_SERVO
+    servo_init();
+#endif
+#ifdef ALIGN_GPIO_CAN
+    align_gpio_init();
+#endif
 #ifdef USE_SERIAL_TELEMETRY
     telem_UART_Init();
 #endif
@@ -812,3 +818,88 @@ void enableCorePeripherals()
     NVIC_EnableIRQ(EXTI15_10_IRQn);
     EXTI->IMR1 |= (1 << 15);
 }
+
+#ifdef ALIGN_SERVO
+/*
+ * Hardware servo PWM output on PA2 / TIM15_CH1 (AF14).
+ *
+ * On the CAN ESC the throttle command arrives over DroneCAN, so the PWM
+ * signal-input capture on TIM15 is unused and the timer is free. We reuse it
+ * to drive a standard 50Hz RC servo waveform (1000-2000us pulse) at 1us
+ * resolution. This is self-contained and does not touch any motor-control
+ * timer (TIM1/2/6/7/16). receiveDshotDma() is skipped on this target so the
+ * input-capture path never reconfigures TIM15.
+ */
+void servo_init(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    LL_TIM_InitTypeDef TIM_InitStruct = { 0 };
+    LL_TIM_OC_InitTypeDef TIM_OC_InitStruct = { 0 };
+
+    LL_APB2_GRP1_EnableClock(LL_APB2_GRP1_PERIPH_TIM15);
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOA);
+
+    /* PA2 ------> TIM15_CH1 */
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_2;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_ALTERNATE;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.OutputType = LL_GPIO_OUTPUT_PUSHPULL;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_NO;
+    GPIO_InitStruct.Alternate = LL_GPIO_AF_14;
+    LL_GPIO_Init(GPIOA, &GPIO_InitStruct);
+
+    /* CPU_FREQUENCY_MHZ / (PSC + 1) = 1MHz -> 1us per tick */
+    TIM_InitStruct.Prescaler = (CPU_FREQUENCY_MHZ - 1);
+    TIM_InitStruct.CounterMode = LL_TIM_COUNTERMODE_UP;
+    TIM_InitStruct.Autoreload = SERVO_PWM_PERIOD_US - 1;
+    TIM_InitStruct.ClockDivision = LL_TIM_CLOCKDIVISION_DIV1;
+    TIM_InitStruct.RepetitionCounter = 0;
+    LL_TIM_Init(TIM15, &TIM_InitStruct);
+    LL_TIM_EnableARRPreload(TIM15);
+
+    TIM_OC_InitStruct.OCMode = LL_TIM_OCMODE_PWM1;
+    TIM_OC_InitStruct.OCState = LL_TIM_OCSTATE_ENABLE;
+    TIM_OC_InitStruct.OCNState = LL_TIM_OCSTATE_DISABLE;
+    TIM_OC_InitStruct.CompareValue = 0;
+    TIM_OC_InitStruct.OCPolarity = LL_TIM_OCPOLARITY_HIGH;
+    LL_TIM_OC_Init(TIM15, LL_TIM_CHANNEL_CH1, &TIM_OC_InitStruct);
+    LL_TIM_OC_EnablePreload(TIM15, LL_TIM_CHANNEL_CH1);
+
+    LL_TIM_CC_EnableChannel(TIM15, LL_TIM_CHANNEL_CH1);
+    LL_TIM_EnableAllOutputs(TIM15); // set MOE; TIM15 has break/output-enable logic
+    LL_TIM_EnableCounter(TIM15);
+    LL_TIM_GenerateEvent_UPDATE(TIM15);
+}
+
+/*
+ * Set the servo pulse width in microseconds
+ */
+void setServoMicroseconds(uint16_t pulse_us)
+{
+    TIM15->CCR1 = pulse_us;
+}
+#endif
+
+#ifdef ALIGN_GPIO_CAN
+/*
+ * PB3 (free on this target since the RGB LED is removed) is read as an external
+ * error flag and exported to the DroneCAN ESC Status error_count field.
+ * Pull-down, so a floating/disconnected pin reads low (0 errors).
+ */
+void align_gpio_init(void)
+{
+    LL_GPIO_InitTypeDef GPIO_InitStruct = { 0 };
+    LL_AHB2_GRP1_EnableClock(LL_AHB2_GRP1_PERIPH_GPIOB);
+    GPIO_InitStruct.Pin = LL_GPIO_PIN_3;
+    GPIO_InitStruct.Mode = LL_GPIO_MODE_INPUT;
+    GPIO_InitStruct.Speed = LL_GPIO_SPEED_FREQ_LOW;
+    GPIO_InitStruct.Pull = LL_GPIO_PULL_DOWN;
+    LL_GPIO_Init(GPIOB, &GPIO_InitStruct);
+}
+
+/* HIGH -> 1, LOW -> 0 */
+uint8_t align_gpio_read(void)
+{
+    return LL_GPIO_IsInputPinSet(GPIOB, LL_GPIO_PIN_3) ? 1 : 0;
+}
+#endif
