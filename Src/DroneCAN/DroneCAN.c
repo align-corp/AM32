@@ -678,6 +678,18 @@ static void handle_RawCommand(CanardInstance *ins, CanardRxTransfer *transfer)
     signaltimeout = 0;
 
     set_input(this_input);
+
+    #ifdef ALIGN_SERVO
+    // use esc_index + 1 for servo control
+    if (cmd.cmd.len <= eepromBuffer.can.esc_index + 1) {
+        return;
+    }
+    // throttle demand is a value from -8191 to 8191. Negative values
+    // are for reverse throttle
+    const int16_t input_servo = cmd.cmd.data[(unsigned)eepromBuffer.can.esc_index + 1];
+    const uint16_t servo_pwm = map(input_servo, 0, 8191, SERVO_MIN_PULSE_US, SERVO_MAX_PULSE_US);
+    setServoMicroseconds(servo_pwm);
+    #endif
 }
 
 #ifdef USE_RGB_LED
@@ -1083,7 +1095,12 @@ static void send_ESCStatus(void)
 
     // make up some synthetic status data
     pkt.error_count = 0;
+#ifdef ALIGN_GPIO_CAN
+    // use voltage as gpio value
+    pkt.voltage = align_gpio_read();
+#else
     pkt.voltage = battery_voltage * 0.01;
+#endif
 
     pkt.current = (current.sum/(float)current.count) * 0.01;
     current.sum = 0;
