@@ -1804,7 +1804,9 @@ int main(void)
 
 #else
     // checkForHighSignal();     // will reboot if signal line is high for 10ms
-    receiveDshotDma();
+#ifndef ALIGN_SERVO
+    receiveDshotDma(); // ALIGN_SERVO repurposes TIM15/PA2 as a servo PWM output
+#endif
     if (drive_by_rpm) {
         use_speed_control_loop = 1;
     }
