@@ -174,6 +174,24 @@
 #define USE_RGB_LED
 #endif
 
+#ifdef ALIGN_15A_SPREADER_L431_CAN
+#define FIRMWARE_NAME "ALIGN_15A_SP"
+#define FILE_NAME "ALIGN_15A_SPREADER_L431_CAN"
+#define DRONECAN_SUPPORT 1
+#define DRONECAN_NODE_NAME "com.align.esc15a.spreader"
+#define DEAD_TIME 30
+#define USE_HSE
+#define HSE_VALUE 24000000
+#define HARDWARE_GROUP_L4_B
+#define TARGET_VOLTAGE_DIVIDER 110
+#define MILLIVOLT_PER_AMP 200
+#define ALIGN_SERVO  // control the servo spreader
+#define SERVO_PWM_PERIOD_US 20000  // 50Hz frame
+#define SERVO_MIN_PULSE_US 600
+#define SERVO_MAX_PULSE_US 2400
+#define ALIGN_GPIO_CAN  // send GPIO input via CAN telemetry
+#endif
+
 #ifdef SIERRA_PULSE_12S_L431_CAN
 #define FIRMWARE_NAME "S_PULSE_12S"
 #define FILE_NAME "SIERRA_PULSE_12S_L431_CAN"
