@@ -192,6 +192,15 @@
 #define ALIGN_GPIO_CAN  // send GPIO input via CAN telemetry
 #endif
 
+#ifdef ALIGN_30A_L431
+#define FIRMWARE_NAME "ALIGN_30A"
+#define FILE_NAME "ALIGN_30A_L431"
+#define DEAD_TIME 30
+#define HARDWARE_GROUP_L4_A
+#define HARDWARE_GROUP_L4_045
+#define USE_SERIAL_TELEMETRY
+#endif
+
 #ifdef SIERRA_PULSE_12S_L431_CAN
 #define FIRMWARE_NAME "S_PULSE_12S"
 #define FILE_NAME "SIERRA_PULSE_12S_L431_CAN"
