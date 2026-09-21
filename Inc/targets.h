@@ -172,6 +172,9 @@
 #define TARGET_VOLTAGE_DIVIDER 110
 #define MILLIVOLT_PER_AMP 75
 #define USE_RGB_LED
+#define ZEROCROSS_CHECK            // ignore implausibly fast zero crosses while starting
+#define ZEROCROSS_CHECK_MS 500     // milliseconds the check stays active for
+#define ZEROCROSS_CHECK_HEADROOM 150 // percent of the no load speed to allow
 #endif
 
 #ifdef ALIGN_15A_SPREADER_L431_CAN
