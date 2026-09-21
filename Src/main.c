@@ -414,6 +414,20 @@ char low_kv_filter_level = 20;
 
 uint16_t tim1_arr = TIM1_AUTORELOAD; // current auto reset value
 uint16_t TIMER1_MAX_ARR = TIM1_AUTORELOAD; // maximum auto reset register value
+#ifdef ZEROCROSS_CHECK
+volatile uint32_t min_commutation_ticks; // shortest plausible commutation interval while starting
+volatile uint16_t startup_ms; // milliseconds since the motor started turning
+/*
+  back emf cannot exceed the applied voltage, so the rotor cannot be turning
+  faster than kv * battery voltage * duty cycle. anything quicker than that is
+  switching noise rather than the rotor, so ignore it while starting.
+*/
+#define ZC_TOO_SOON() (startup_ms < (uint16_t)ZEROCROSS_CHECK_MS && \
+                       min_commutation_ticks != 0 && \
+                       INTERVAL_TIMER_COUNT < min_commutation_ticks)
+#else
+#define ZC_TOO_SOON() 0
+#endif
 uint16_t duty_cycle_maximum = 2000; // restricted by temperature or low rpm throttle protect
 uint16_t low_rpm_level = 20; // thousand erpm used to set range for throttle resrictions
 uint16_t high_rpm_level = 70; //
@@ -908,6 +922,9 @@ void interruptRoutine()
 //            return;
 //        }
 //    }
+    if (ZC_TOO_SOON()) {
+        return;
+    }
         for (int i = 0; i < filter_level; i++) {
 #if defined(MCU_F031) || defined(MCU_G031)
             if (((current_GPIO_PORT->IDR & current_GPIO_PIN) == !(rising))) {
@@ -1375,7 +1392,7 @@ void tenKhzRoutine()
 	//				send_LED_RGB(255, 0, 0);
             maskPhaseInterrupts();
             getBemfState();
-            if (!zcfound) {
+            if (!zcfound && !ZC_TOO_SOON()) {
                 if (rising) {
                     if (bemfcounter > min_bemf_counts_up) {
                         zcfound = 1;
@@ -1393,6 +1410,23 @@ void tenKhzRoutine()
         if (one_khz_loop_counter > PID_LOOP_DIVIDER) { // 1khz PID loop
             PROCESS_ADC_FLAG = 1; // set flag to do new adc read at lower priority
             one_khz_loop_counter = 0;
+#ifdef ZEROCROSS_CHECK
+            {
+                if (!running) {
+                    startup_ms = 0;
+                } else if (startup_ms < (uint16_t)ZEROCROSS_CHECK_MS) {
+                    startup_ms++;
+                }
+                // applied volts * 100, then mechanical rpm, then erpm, plus headroom
+                const uint32_t applied = ((uint32_t)battery_voltage * duty_cycle) / 2000;
+                const uint32_t max_erpm = (((uint32_t)motor_kv * applied) / 100)
+                                          * (eepromBuffer.motor_poles / 2)
+                                          * ZEROCROSS_CHECK_HEADROOM / 100;
+                // 20e6 = 0.5us ticks per commutation at 1 erpm; floor the window
+                // at 2.5ms so a low duty cannot block starting altogether
+                min_commutation_ticks = (max_erpm > 4000) ? (20000000UL / max_erpm) : 5000;
+            }
+#endif
             if (use_current_limit && running) {
                 use_current_limit_adjust -= (int16_t)(doPidCalculations(&currentPid, actual_current,
                                                           eepromBuffer.limits.current * 2 * 100)
@@ -2125,7 +2159,7 @@ if(zero_crosses < 5){
             if (old_routine && running) {
                 maskPhaseInterrupts();
                 getBemfState();
-                if (!zcfound) {
+                if (!zcfound && !ZC_TOO_SOON()) {
                     if (rising) {
                         if (bemfcounter > min_bemf_counts_up) {
                             zcfound = 1;
